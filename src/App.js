@@ -1,25 +1,29 @@
-import logo from './logo.svg';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMovies } from './redux/actions';
+import MovieList from './components/MovieList';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+    const dispatch = useDispatch();
+    const moviesData = useSelector(state => state.movies);
+
+    useEffect(() => {
+        dispatch(fetchMovies());
+    }, [dispatch]);
+
+    return (
+        <div className="App">
+            <h1>Netflix Clone</h1>
+            {moviesData.loading ? (
+                <h2>Loading...</h2>
+            ) : moviesData.error ? (
+                <h2>{moviesData.error}</h2>
+            ) : (
+                <MovieList movies={moviesData.movies} />
+            )}
+        </div>
+    );
+};
 
 export default App;
